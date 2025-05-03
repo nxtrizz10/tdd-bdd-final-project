@@ -38,3 +38,73 @@ Scenario: Create a Product
     And I should see "True" in the "Available" dropdown
     And I should see "Tools" in the "Category" dropdown
     And I should see "34.95" in the "Price" field
+
+Scenario: Update a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Wrench"
+    And I set the "Description" to "Adjustable wrench"
+    And I select "True" in the "Available" dropdown
+    And I select "Tools" in the "Category" dropdown
+    And I set the "Price" to "19.99"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "Wrench" in the "Name" field
+    When I set the "Description" to "Heavy-duty wrench"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    And I should see "Heavy-duty wrench" in the "Description" field
+    
+Scenario: Delete a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Drill"
+    And I set the "Description" to "Cordless drill"
+    And I select "True" in the "Available" dropdown
+    And I select "Tools" in the "Category" dropdown
+    And I set the "Price" to "79.99"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Product has been Deleted!"
+    When I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Product not found!"
+
+Scenario: List all Products
+    When I visit the "Home Page"
+    Then I should see "Hat" in the results
+    And I should see "Shoes" in the results
+    And I should see "Big Mac" in the results
+    And I should see "Sheets" in the results
+
+Scenario: Search Products by Category
+    When I visit the "Home Page"
+    And I select "CLOTHS" in the "Category" dropdown
+    And I press the "Search" button
+    Then I should see "Hat" in the results
+    And I should see "Shoes" in the results
+    But I should not see "Big Mac" in the results
+    And I should not see "Sheets" in the results
+
+Scenario: Search Products by Availability
+    When I visit the "Home Page"
+    And I select "True" in the "Available" dropdown
+    And I press the "Search" button
+    Then I should see "Hat" in the results
+    And I should see "Big Mac" in the results
+    And I should see "Sheets" in the results
+    But I should not see "Shoes" in the results
+
+Scenario: Search Products by Name
+    When I visit the "Home Page"
+    And I set the "Name" to "Big Mac"
+    And I press the "Search" button
+    Then I should see "Big Mac" in the results
+    But I should not see "Hat" in the results
+    And I should not see "Shoes" in the results
+    And I should not see "Sheets" in the results
