@@ -106,6 +106,42 @@ def step_impl(context, element_name):
 
 ## UPDATE CODE HERE ##
 
+@when('I click the "{button_name}" button')
+def step_impl(context, button_name):
+    """Click the button with the specified name."""
+    button_id = button_name.lower().replace(' ', '-') + '-btn'  # Menggunakan konvensi id untuk tombol
+    button = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, button_id))
+    )
+    button.click()
+    
+@then('I should see "{text_string}" in the "{element_name}" field')
+def step_impl(context, text_string, element_name):
+    """ Verify if a specific text is present in a specific field """
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element_value(
+            (By.ID, element_id),
+            text_string
+        )
+    )
+    assert(found)
+
+# Step for verifying a specific name or text NOT to be present in a field
+@then('I should not see "{text_string}" in the "{element_name}" field')
+def step_impl(context, text_string, element_name):
+    """ Verify that a specific text is NOT present in a specific field """
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element = context.driver.find_element(By.ID, element_id)
+    assert(text_string not in element.text)
+
+# Step for verifying a specific message is present
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    """ Verify that a specific message is present on the page """
+    body = context.driver.find_element(By.TAG_NAME, 'body')
+    assert(message in body.text)
+
 ##################################################################
 # This code works because of the following naming convention:
 # The id field for text input in the html is the element name
